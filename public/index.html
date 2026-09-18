@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MTV — News</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14111B; --ink-raised:#1C1826; --paper:#EFEBDF; --paper-dim:#B8B2A4;
+    --violet:#6C4CF0; --coral:#FF5B4E; --line: rgba(239,235,223,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);font-family:'Inter',system-ui,sans-serif;}
+  body{-webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+  header{border-bottom:1px solid var(--line); padding:22px 0;}
+  .masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .badge{width:44px;height:44px;flex-shrink:0;}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.04em;line-height:1;}
+  nav{display:flex;align-items:center;gap:22px;font-size:14.5px;color:var(--paper-dim);}
+  #post-btn{background:var(--violet);color:#fff;border:none;border-radius:7px;padding:9px 16px;
+    font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;}
+  #post-btn:hover{background:#7d5ff5;}
+  .featured{padding:48px 0 36px;border-bottom:1px solid var(--line);}
+  .featured img{width:100%;border-radius:10px;margin-bottom:20px;display:block;max-height:360px;object-fit:cover;}
+  .tag{display:inline-block;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:5px;
+    background:rgba(255,91,78,0.16);color:var(--coral);margin-bottom:14px;}
+  .tag.violet{background:rgba(108,76,240,0.18);color:#B4A2FA;}
+  .headline{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:0.98;letter-spacing:0.005em;margin:0 0 16px;max-width:14ch;}
+  .excerpt{font-size:17px;line-height:1.6;color:#D9D4C8;max-width:56ch;margin:0 0 14px;}
+  .meta{font-size:13.5px;color:var(--paper-dim);}
+  .empty-note{color:var(--paper-dim);font-size:15px;padding:40px 0;}
+  .list-title{font-size:14px;color:var(--paper-dim);margin:38px 0 4px;}
+  .row{display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--line);}
+  .row .thumb{width:96px;height:72px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--ink-raised);}
+  .row .date{width:74px;flex-shrink:0;font-size:13px;color:var(--paper-dim);padding-top:3px;}
+  .row .body{flex:1;min-width:0;}
+  .row h3{font-size:18px;font-weight:700;margin:0 0 6px;}
+  .row p{margin:0 0 8px;font-size:14.5px;line-height:1.55;color:#C9C4B8;}
+  .row-foot{display:flex;align-items:center;gap:10px;}
+  .del{background:none;border:1px solid var(--line);color:var(--paper-dim);border-radius:6px;
+    font-size:12px;padding:3px 9px;cursor:pointer;font-family:inherit;}
+  .del:hover{color:var(--coral);border-color:var(--coral);}
+  footer{padding:36px 0 60px;color:var(--paper-dim);font-size:13.5px;}
+  .overlay{position:fixed;inset:0;background:rgba(10,8,14,0.72);display:none;
+    align-items:flex-start;justify-content:center;padding:60px 20px;z-index:10;overflow-y:auto;}
+  .overlay.open{display:flex;}
+  .modal{background:var(--ink-raised);border:1px solid var(--line);border-radius:12px;max-width:520px;width:100%;padding:28px;}
+  .modal h2{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.03em;margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;color:var(--paper-dim);margin-bottom:6px;}
+  .field input,.field textarea{width:100%;background:var(--ink);border:1px solid var(--line);
+    border-radius:7px;color:var(--paper);font-family:inherit;font-size:14.5px;padding:9px 11px;}
+  .field input[type=file]{padding:7px;}
+  .field textarea{resize:vertical;min-height:80px;}
+  #preview{margin-top:8px;max-height:140px;border-radius:8px;display:none;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .btn-ghost{background:none;border:1px solid var(--line);color:var(--paper);border-radius:7px;
+    padding:9px 16px;font-family:inherit;font-size:14.5px;cursor:pointer;}
+  .btn-primary{background:var(--violet);border:none;color:#fff;border-radius:7px;
+    padding:9px 16px;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;}
+  .status{font-size:13px;color:var(--paper-dim);margin-top:10px;min-height:16px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap masthead">
+    <div class="brand">
+      <svg class="badge" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#6C4CF0"/><stop offset="100%" stop-color="#FF5B4E"/>
+        </linearGradient></defs>
+        <rect x="3" y="3" width="42" height="42" rx="9" fill="url(#g1)" transform="rotate(-6 24 24)"/>
+        <path d="M16 31V17l8 9 8-9v14" stroke="#14111B" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="wordmark">MTV</span>
+    </div>
+    <nav>
+      <button id="post-btn" type="button">Post news</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer class="wrap">MTV — an independent youth &amp; community news feed.</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2>Post news</h2>
+    <div class="field"><label>Category</label><input id="f-tag" placeholder="e.g. Culture, Tech, Sport"></div>
+    <div class="field"><label>Headline</label><input id="f-title" placeholder="What happened?"></div>
+    <div class="field"><label>Summary</label><textarea id="f-excerpt" placeholder="A sentence or two."></textarea></div>
+    <div class="field"><label>Author</label><input id="f-author" placeholder="Byline" value="MTV Newsroom"></div>
+    <div class="field">
+      <label>Image (optional)</label>
+      <input id="f-image" type="file" accept="image/*">
+      <img id="preview" alt="">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-btn" type="button">Cancel</button>
+      <button class="btn-primary" id="submit-btn" type="button">Publish</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var main = document.getElementById('main');
+  var posts = [];
+
+  function fmtDate(iso){
+    var d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function render(){
+    main.innerHTML = '';
+    if(posts.length === 0){
+      var empty = document.createElement('p');
+      empty.className = 'empty-note';
+      empty.textContent = 'No news posted yet.';
+      main.appendChild(empty);
+      return;
+    }
+    var featured = posts[0];
+    var rest = posts.slice(1);
+
+    var feat = document.createElement('section');
+    feat.className = 'featured';
+    feat.innerHTML =
+      (featured.image ? '<img src="'+featured.image+'" alt="">' : '') +
+      '<span class="tag">'+escapeHtml(featured.tag)+'</span>'+
+      '<h1 class="headline">'+escapeHtml(featured.title)+'</h1>'+
+      '<p class="excerpt">'+escapeHtml(featured.excerpt)+'</p>'+
+      '<div class="meta">By '+escapeHtml(featured.author)+' · '+fmtDate(featured.date)+'</div>';
+    var d0 = document.createElement('button');
+    d0.className = 'del'; d0.textContent = 'Remove'; d0.style.marginTop='12px';
+    d0.onclick = function(){ removePost(featured.id); };
+    feat.appendChild(d0);
+    main.appendChild(feat);
+
+    if(rest.length){
+      var lt = document.createElement('div');
+      lt.className = 'list-title'; lt.textContent = 'More news';
+      main.appendChild(lt);
+
+      rest.forEach(function(p){
+        var row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML =
+          (p.image ? '<img class="thumb" src="'+p.image+'" alt="">' : '<div class="date">'+fmtDate(p.date)+'</div>') +
+          '<div class="body">'+
+            (p.image ? '<div class="meta" style="margin-bottom:6px;">'+fmtDate(p.date)+'</div>' : '') +
+            '<h3>'+escapeHtml(p.title)+'</h3>'+
+            '<p>'+escapeHtml(p.excerpt)+'</p>'+
+            '<div class="row-foot"><span class="tag violet">'+escapeHtml(p.tag)+'</span></div>'+
+          '</div>';
+        var del = document.createElement('button');
+        del.className='del'; del.textContent='Remove';
+        del.onclick = function(){ removePost(p.id); };
+        row.querySelector('.row-foot').appendChild(del);
+        main.appendChild(row);
+      });
+    }
+  }
+
+  function setStatus(msg){ document.getElementById('status').textContent = msg || ''; }
+
+  function loadPosts(){
+    fetch('/api/posts').then(function(r){ return r.json(); }).then(function(list){
+      posts = list; render();
+    }).catch(function(){ setStatus('Could not reach the server.'); });
+  }
+
+  function removePost(id){
+    if(!confirm('Remove this post?')) return;
+    fetch('/api/posts/' + id, { method:'DELETE' }).then(loadPosts);
+  }
+
+  var overlay = document.getElementById('overlay');
+  var fileInput = document.getElementById('f-image');
+  var preview = document.getElementById('preview');
+
+  fileInput.onchange = function(){
+    var file = fileInput.files[0];
+    if(!file){ preview.style.display='none'; return; }
+    var reader = new FileReader();
+    reader.onload = function(e){ preview.src = e.target.result; preview.style.display='block'; };
+    reader.readAsDataURL(file);
+  };
+
+  document.getElementById('post-btn').onclick = function(){ setStatus(''); overlay.classList.add('open'); };
+  document.getElementById('cancel-btn').onclick = function(){ overlay.classList.remove('open'); };
+
+  document.getElementById('submit-btn').onclick = function(){
+    var title = document.getElementById('f-title').value.trim();
+    var excerpt = document.getElementById('f-excerpt').value.trim();
+    var tag = document.getElementById('f-tag').value.trim();
+    var author = document.getElementById('f-author').value.trim();
+    if(!title || !excerpt){ setStatus('Add a headline and a summary before publishing.'); return; }
+
+    var fd = new FormData();
+    fd.append('title', title);
+    fd.append('excerpt', excerpt);
+    fd.append('tag', tag);
+    fd.append('author', author);
+    if(fileInput.files[0]) fd.append('image', fileInput.files[0]);
+
+    setStatus('Publishing…');
+    fetch('/api/posts', { method:'POST', body: fd })
+      .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+      .then(function(){
+        overlay.classList.remove('open');
+        document.getElementById('f-title').value = '';
+        document.getElementById('f-excerpt').value = '';
+        document.getElementById('f-tag').value = '';
+        fileInput.value = '';
+        preview.style.display = 'none';
+        loadPosts();
+      })
+      .catch(function(){ setStatus('Could not publish just now. Try again.'); });
+  };
+
+  loadPosts();
+})();
+</script>
+</body>
+</html>
